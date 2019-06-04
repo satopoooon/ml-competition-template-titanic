@@ -16,26 +16,28 @@ def get_arguments():
     )
     return parser.parse_args()
 
-
 def get_features(namespace):
     for k, v in namespace.items():
         if inspect.isclass(v) and issubclass(v, Feature) \
                 and not inspect.isabstract(v):
             yield v()
 
-
 def generate_features(namespace, overwrite):
     for f in get_features(namespace):
-        if f.train_path.exists() and f.test_path.exists() and not overwrite:
-            print(f.name, 'was skipped')
-        else:
-            f.run().save()
 
+        print(f.run().save())
+
+        # .save()
+        # if f.train_path.exists() and f.test_path.exists() and not overwrite:
+        #     print(f.name, 'was skipped')
+        # else:
+        #     f.run().save()
 
 class Feature(metaclass=ABCMeta):
     prefix = ''
     suffix = ''
-    dir = '.'
+    #dir = '.'
+    path = r"/Users/satoshi/git/ml-competition-template-titanic/features"
 
     def __init__(self):
         if self.__class__.__name__.isupper():
@@ -48,8 +50,8 @@ class Feature(metaclass=ABCMeta):
 
         self.train = pd.DataFrame()
         self.test = pd.DataFrame()
-        self.train_path = Path(self.dir) / f'{self.name}_train.feather'
-        self.test_path = Path(self.dir) / f'{self.name}_test.feather'
+        self.train_path = Path(self.path) / f'{self.name}_train.feather'
+        self.test_path = Path(self.path) / f'{self.name}_test.feather'
 
     def run(self):
         with timer(self.name):
@@ -65,6 +67,11 @@ class Feature(metaclass=ABCMeta):
         raise NotImplementedError
 
     def save(self):
+        #path = r"/Users/satoshi/git/ml-competition-template-titanic"
+        #train_path = path + "/" + str(self.train_path)
+        #test_path = path + "/" + str(self.test_path)
+        print(str(self.train_path))
+        #print(test_path)
         self.train.to_feather(str(self.train_path))
         self.test.to_feather(str(self.test_path))
 

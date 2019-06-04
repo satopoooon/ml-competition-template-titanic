@@ -6,7 +6,6 @@ from features.base import Feature, get_arguments, generate_features
 
 Feature.dir = 'features'
 
-
 class Pclass(Feature):
     def create_features(self):
         self.train['Pclass'] = train['Pclass']
@@ -53,25 +52,25 @@ class Fare(Feature):
         )
 
 
-class Age(Feature):
-    def create_features(self):
-        data = train.append(test)
-        age_mean = data['Age'].mean()
-        age_std = data['Age'].std()
-        self.train['Age'] = pd.qcut(
-            train['Age'].fillna(
-                np.random.randint(age_mean - age_std, age_mean + age_std)
-            ),
-            5,
-            labels=False
-        )
-        self.test['Age'] = pd.qcut(
-            test['Age'].fillna(
-                np.random.randint(age_mean - age_std, age_mean + age_std)
-            ),
-            5,
-            labels=False
-        )
+# class Age(Feature):
+#     def create_features(self):
+#         data = train.append(test)
+#         age_mean = data['Age'].mean()
+#         age_std = data['Age'].std()
+#         self.train['Age'] = pd.qcut(
+#             train['Age'].fillna(
+#                 np.random.randint(age_mean - age_std, age_mean + age_std)
+#             ),
+#             5#,
+# #            labels=False
+#         )
+#         self.test['Age'] = pd.qcut(
+#             test['Age'].fillna(
+#                 np.random.randint(age_mean - age_std, age_mean + age_std)
+#             ),
+#             5,
+#             labels=False
+#         )
 
 
 def get_title(name):
@@ -128,7 +127,7 @@ class Title(Feature):
 if __name__ == '__main__':
     args = get_arguments()
 
-    train = pd.read_feather('./data/input/train.feather')
-    test = pd.read_feather('./data/input/test.feather')
+    train = pd.read_feather('../data/input/train.feather')
+    test = pd.read_feather('../data/input/test.feather')
 
     generate_features(globals(), args.force)
